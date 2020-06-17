@@ -1,0 +1,19 @@
+pipeline {
+    agent none
+    stages {
+        stage('Invoke jobs') {
+            parallel {
+                stage('Job A') {
+                    steps {
+                        build job: 'Job A'
+                    }
+                }
+                stage('Job B') {
+                    steps {
+                        build job: 'Job B', parameters: [string(name: 'param', value: 'Sii people')]
+                    }
+                }
+            }
+        }
+    }
+}

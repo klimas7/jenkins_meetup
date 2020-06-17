@@ -1,0 +1,46 @@
+properties([parameters([
+        string(defaultValue: 'test_a', description: '', name: 'TEST', trim: false)
+])])
+node('linux_1')  {
+    stage('First stage') {
+        echo "Sii Power People"
+    }
+    stage("Environments") {
+        echo env.PATH
+        echo env.BUILD_ID
+        echo env.JOB_URL
+    }
+    stage('Parameters') {
+        echo params.TEST
+        echo params.TEST2
+    }
+    stage('currentBuild') {
+        echo currentBuild.displayName
+        echo currentBuild.currentResult
+    }
+}
+//-----------------------------
+properties([parameters([
+        string(defaultValue: 'test_a', description: '', name: 'TEST', trim: false),
+        string(defaultValue: 'test2_b', description: '', name: 'TEST2', trim: false)
+])])
+node('linux_1')  {
+    stage('First stage') {
+        echo "Sii Power People"
+    }
+    stage("Environments") {
+        echo env.PATH
+        echo env.BUILD_ID
+        echo env.JOB_URL
+    }
+    stage('Parameters') {
+        echo params.TEST
+        echo params.TEST2
+    }
+    stage('currentBuild') {
+        echo currentBuild.displayName
+        echo currentBuild.currentResult
+        //error 'Cos poszło nie tak'
+        //unstable 'Cos poszło nie najlepiej'
+    }
+}

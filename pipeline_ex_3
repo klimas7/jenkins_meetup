@@ -1,0 +1,94 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building ...'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Test ...'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying ...'
+            }
+        }
+    }
+}
+//--------------------------------------
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building ...'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Test ...'
+                unstable 'Cos poszło nie najlepiej'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying ...'
+            }
+        }
+    }
+}
+//---------------------------------------
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building ...'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Test ...'
+                error 'Cos poszło całkiem źle'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying ...'
+            }
+        }
+    }
+}
+//--------------------------------------------
+pipeline {
+    agent any
+    parameters {
+        booleanParam defaultValue: false, description: 'Czy coś ma się deployować', name: 'deploy'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building ...'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Test ...'
+                unstable 'Cos poszło nie najlepiej'
+            }
+        }
+        stage('Deploy') {
+            when {
+                expression {params.deploy && currentBuild.currentResult == "SUCCESS" }
+            }
+            steps {
+                echo 'Deploying ...'
+            }
+        }
+    }
+}
+//-------------------------------------------
+//Dodać nowy parametr z "palca"

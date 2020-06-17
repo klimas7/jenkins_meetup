@@ -1,0 +1,98 @@
+pipeline {
+    agent any
+    tools {
+        maven 'M3'
+        jdk 'jdk9'
+    }
+    stages {
+        stage('Git'){
+            steps {
+                git branch: 'master', url: 'ssh://git@localhost:7999/meet/restcounter.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn --version'
+                sh 'mvn clean install'
+            }
+            post {
+                success {
+                    archiveArtifacts 'target/*.jar'
+                    junit '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+    }
+}
+//------------------
+pipeline {
+    agent any
+    tools {
+        maven 'M3'
+        jdk 'jdk9'
+    }
+    triggers {
+        pollSCM ''
+    }
+    stages {
+        stage('Git'){
+            steps {
+                git branch: 'master', url: 'ssh://git@localhost:7999/meet/restcounter.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn --version'
+                sh 'mvn clean install'
+            }
+            post {
+                success {
+                    archiveArtifacts 'target/*.jar'
+                    junit '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+    }
+}
+//-------------------------
+pipeline {
+    agent any
+    tools {
+        maven 'M3'
+        jdk 'jdk9'
+    }
+    triggers {
+        pollSCM ''
+    }
+    stages {
+        stage('Git'){
+            steps {
+                git branch: 'master', url: 'ssh://git@localhost:7999/meet/restcounter.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn --version'
+                sh 'mvn clean install'
+            }
+            post {
+                success {
+                    archiveArtifacts 'target/*.jar'
+                    junit '**/target/surefire-reports/*.xml'
+                }
+                always {
+                    script {
+                        notifyBitbucket commitSha1: '',
+                                considerUnstableAsSuccess: false,
+                                credentialsId: 'f1f681b2-702b-447a-b542-d7e13ea17b0f',
+                                disableInprogressNotification: false, ignoreUnverifiedSSLPeer: false,
+                                includeBuildNumberInKey: false, prependParentProjectKey: false, projectKey: '',
+                                stashServerBaseUrl: 'http://localhost:7990'
+                    }
+
+                }
+            }
+        }
+    }
+}
+

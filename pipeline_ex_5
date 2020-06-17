@@ -1,0 +1,29 @@
+pipeline {
+    agent {
+        docker {
+            image 'maven:3.6.3-jdk-11-slim'
+        }
+    }
+    stages {
+        stage('Git'){
+            steps {
+                git branch: 'master', url: 'ssh://git@localhost:7999/meet/restcounter.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn --version'
+                sh 'mvn clean install'
+            }
+            post {
+                success {
+                    archiveArtifacts 'target/*.jar'
+
+                }
+                always {
+                    junit '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+    }
+}

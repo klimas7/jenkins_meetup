@@ -1,0 +1,75 @@
+pipeline {
+    agent any
+    stages {
+        stage('Git'){
+            steps {
+                git branch: 'master', url: 'ssh://git@localhost:7999/meet/restcounter.git'
+            }
+        }
+    }
+}
+//------------------------
+pipeline {
+    agent any
+    stages {
+        stage('Git'){
+            steps {
+                git branch: 'master', url: 'ssh://git@localhost:7999/meet/restcounter.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn --version'
+                sh 'mvn clean install'
+            }
+        }
+    }
+}
+//-----------------------------
+pipeline {
+    agent any
+    tools {
+        maven 'M3'
+        jdk 'jdk9'
+    }
+    stages {
+        stage('Git'){
+            steps {
+                git branch: 'master', url: 'ssh://git@localhost:7999/meet/restcounter.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn --version'
+                sh 'mvn clean install'
+            }
+        }
+    }
+}
+//----------------------------------------------------------------------
+pipeline {
+    agent any
+    tools {
+        maven 'M3'
+        jdk 'jdk9'
+    }
+    stages {
+        stage('Git'){
+            steps {
+                git branch: 'master', url: 'ssh://git@localhost:7999/meet/restcounter.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn --version'
+                sh 'mvn clean install'
+            }
+            post {
+                success {
+                    archiveArtifacts 'target/*.jar'
+                    junit '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+    }
+}
