@@ -1,0 +1,4 @@
+docker volume create --name bitbucketMeetupVolume
+docker run -v bitbucketMeetupVolume:/var/atlassian/application-data/bitbucket --name=bitbucket -d -p 7990:7990 -p 7999:7999 atlassian/bitbucket-server
+docker stop bitbucket
+docker start bitbucket
